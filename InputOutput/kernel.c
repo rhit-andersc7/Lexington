@@ -21,8 +21,10 @@ int main() {
   printString(buffer);
 
   makeInterrupt21();
-  interrupt(0x21, 0, 0, 0, 0);
-	while(1); /* never forget this */
+  interrupt(0x21,1,line,0,0);
+  interrupt(0x21,0,line,0,0);
+	
+  while(1); /* never forget this */
 	return 0;
 }
 
