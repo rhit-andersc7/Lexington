@@ -11,18 +11,15 @@ int main() {
 
   char buffer[512];
 	char line[80];
-	printStringLocation("Hello World With Location", 0, 0);
-	             
-	printString("Enter a line: \0");
-	readString(line);
-	printString(line);
 
-  readSector(buffer, 30);
-  printString(buffer);
+  printStringLocation("Hello World\0", 0, 0);
 
   makeInterrupt21();
+  interrupt(0x21,0,"Enter line:\0",0,0);
   interrupt(0x21,1,line,0,0);
   interrupt(0x21,0,line,0,0);
+  interrupt(0x21,2,buffer,30);
+  interrupt(0x21,0,buffer,0);
 	
   while(1); /* never forget this */
 	return 0;
