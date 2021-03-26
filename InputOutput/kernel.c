@@ -117,5 +117,5 @@ void readSector(char *buffer, int sector){
     int relativeSector = mod(sector, 18) + 1;
     int head = mod(div(sector,18),2);
     int track = div(sector, 36);
-		interrupt(0x13, 2, 1, buffer, track, relativeSector, head, 0);
+		interrupt(0x13, 513, buffer, track*256+relativeSector, head*256);
 }
