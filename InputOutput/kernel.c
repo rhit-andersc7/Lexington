@@ -2,7 +2,7 @@ void printString(char *);
 void printCharLocation(char, int, int);
 void printStringLocation(char*, int, int);
 int main() {
-	printStringLocation("Hello World", 0, 0);
+	printStringLocation("Hello World With Location", 0, 0);
 	printString("Hello World");
 	while(1) {
 	}
@@ -15,7 +15,7 @@ void printString(char *chars) {
 	while(c != '\0') {
 		interrupt(0x10, 0xe*256+c, 0, 0, 0);
 		i++;
-		c = char[i];
+		c = chars[i];
 	}
 }
 
