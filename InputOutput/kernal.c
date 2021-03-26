@@ -34,3 +34,30 @@ void printString(char *chars){
 	
 	}
 }
+
+void printChar(char c, int row, int column){
+	int memRow = 0xB000 + row*160;
+	int memCol = memRow + column*2; 
+
+	putInMemory(memRow,memCol,c);
+	putInMemory(memRow,memCol+1, 0x7);
+}
+
+void printString(char* string, int row, int column){
+
+	int i = 0;
+	char c = string[i];
+
+	while(c!='\0'){
+		printChar(c,row,column);
+		
+		i++;
+		column++;
+		if(column>=80){
+			row++;
+			column=0;
+		}
+		c = string[i];
+	}
+
+}
