@@ -1,15 +1,23 @@
 void printString(char*);
 void printCharLocation(char, int, int);
 void printStringLocation(char*, int, int);
-void readString(char*)
+void readString(char*);
+int mod(int, int);
+int div(int, int);
+void readSector(char*, int);
+
 int main() {
+
+  char buffer[512];
+	char line[80];
 	printStringLocation("Hello World With Location", 0, 0);
-	
-	char line[80]; // Hint: this line needs to be at the top of main
-               // in ansi C declarations must be at the start of a function
+	             
 	printString("Enter a line: \0");
 	readString(line);
 	printString(line);
+
+  readSector(buffer, 30);
+  printString(buffer);
 
 	while(1); /* never forget this */
 	return 0;
@@ -87,3 +95,27 @@ void readString(char *line){
   return;
 }
 
+int mod(int a, int b){
+  int temp;
+  temp = a;
+  while (temp >= b) {
+    temp = temp-b;
+  }
+  return temp;
+}
+
+int div(int a, int b){
+  int quotient;
+  quotient = 0;
+  while ((quotient + 1) * b <= a) {
+    quotient++;
+  }
+  return quotient;
+}
+
+void readSector(char *buffer, int sector){
+    int relativeSector = mod(sector, 18) + 1;
+    int head = mod(div(sector,18),2);
+    int track = div(sector, 36);
+		interrupt(0x13, 2, 1, buffer, track, relativeSector, head, 0);
+}
