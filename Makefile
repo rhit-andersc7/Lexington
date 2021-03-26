@@ -2,7 +2,7 @@ ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 USER_ID:=$(shell id -u)
 GROUP_ID:=$(shell id -g)
 
-all: build temp
+all: build run
 
 gen:
 	docker build -t lexington:latest \
