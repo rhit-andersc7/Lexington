@@ -28,8 +28,12 @@ int main() {
 }
 
 void printString(char *chars) {
-	char c = *chars;
+	int i = 0;
+	char c = chars[0];
 	while(c != '\0') {
+		interrupt(0x10, 0xe*256+c, 0, 0, 0);
+		i++;
+		c = char[i];
 	}
 }
 
