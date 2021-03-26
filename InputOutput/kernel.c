@@ -21,7 +21,7 @@ int main() {
   printString(buffer);
 
   makeInterrupt21();
-
+  interrupt(0x21, 0, 0, 0, 0);
 	while(1); /* never forget this */
 	return 0;
 }
@@ -124,5 +124,5 @@ void readSector(char *buffer, int sector){
 }
 
 void handleInterrupt21(int ax, int bx, int cx, int dx){
-  printString("Hello World\0");
+  printString("Hello World interrupt\0");
 }
