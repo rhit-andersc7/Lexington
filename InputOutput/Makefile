@@ -27,3 +27,7 @@ clean:
 
 run: bin/kernel
 	qemu-system-i386 -fda lexington.img -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot order=a
+
+# To run in docker container:
+build:
+	make -C .. build
