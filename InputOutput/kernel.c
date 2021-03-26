@@ -124,5 +124,17 @@ void readSector(char *buffer, int sector){
 }
 
 void handleInterrupt21(int ax, int bx, int cx, int dx){
-  printString("Hello World interrupt\0");
+  switch(ax){
+    case 0:
+      printString(bx);
+      break;
+    case 1:
+      readString(bx);
+      break;
+    case 2:
+      readSector(bx, cx);
+      break;
+    default:
+      printString("Error Not a Function!\0");
+  }
 }
