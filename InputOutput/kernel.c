@@ -1,11 +1,17 @@
-void printString(char *);
+void printString(char*);
 void printCharLocation(char, int, int);
 void printStringLocation(char*, int, int);
+void readString(char*)
 int main() {
 	printStringLocation("Hello World With Location", 0, 0);
-	printString("Hello World");
-	while(1) {
-	}
+	
+	char line[80]; // Hint: this line needs to be at the top of main
+               // in ansi C declarations must be at the start of a function
+	printString("Enter a line: \0");
+	readString(line);
+	printString(line);
+
+	while(1); /* never forget this */
 	return 0;
 }
 
@@ -20,11 +26,10 @@ void printString(char *chars) {
 }
 
 void printCharLocation(char c, int row, int column){
-	int memRow = 0xB000 + row*160;
-	int memCol = memRow + column*2; 
+	int memAddress = 0x8000 + row*160 + column*2;
 
-	putInMemory(memRow,memCol,c);
-	putInMemory(memRow,memCol+1, 0x7);
+	putInMemory(0xB000,memAddress,c);
+	putInMemory(0xB000,memAddress+1, 0x7);
 }
 
 void printStringLocation(char* string, int row, int column){
@@ -45,3 +50,40 @@ void printStringLocation(char* string, int row, int column){
 	}
 
 }
+
+void readString(char *line){
+  int i, lineLength, ax;
+  char charRead, backSpace, enter;
+  lineLength = 80;
+  i = 0;
+  ax = 0;
+  backSpace = 0x8;
+  enter = 0xd;
+  charRead = interrupt(0x16, ax, 0, 0, 0);
+  while (charRead != enter && i < lineLength-2) {
+    if (charRead != backSpace) {
+      interrupt(0x10, 0xe*256+charRead, 0, 0, 0);
+      line[i] = charRead;
+      i++;
+    } else {
+      i--;
+      if (i >= 0) {
+	interrupt(0x10, 0xe*256+charRead, 0, 0, 0);
+	interrupt(0x10, 0xe*256+'\0', 0, 0, 0);
+	interrupt(0x10, 0xe*256+backSpace, 0, 0, 0);
+      }
+      else {
+	i = 0;
+      }
+    }
+    charRead = interrupt(0x16, ax, 0, 0, 0);  
+  }
+  line[i] = 0xa;
+  line[i+1] = 0x0;
+  
+  /* correctly prints a newline */
+  printString("\r\n");
+
+  return;
+}
+
