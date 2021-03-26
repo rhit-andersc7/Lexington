@@ -5,7 +5,7 @@ void readString(char*);
 int mod(int, int);
 int div(int, int);
 void readSector(char*, int);
-handleInterrupt21(int, int, int, int);
+void handleInterrupt21(int, int, int, int);
   
 int main() {
 
@@ -20,7 +20,7 @@ int main() {
   readSector(buffer, 30);
   printString(buffer);
 
-  makeInterrupt21(0x21,0,0,0,0);
+  makeInterrupt21();
 
 	while(1); /* never forget this */
 	return 0;
