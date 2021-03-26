@@ -1,6 +1,5 @@
-printString(char *);
+void printString(char *);
 int main() {
-
 	putInMemory(0xB000, 0x8500, 'H');
 	putInMemory(0xB000, 0x8501, 0x7);
 	putInMemory(0xB000, 0x8502, 'e');
@@ -23,14 +22,13 @@ int main() {
 	putInMemory(0xB000, 0x8513, 0x7);
 	putInMemory(0xB000, 0x8514, 'd');
 	putInMemory(0xB000, 0x8515, 0x7);
-	while(1){
+	while(1) {
 	}
 	return 0;
 }
 
-void printString(char *chars){
+void printString(char *chars) {
 	char c = *chars;
-	while(c != '\0'){
-	
+	while(c != '\0') {
 	}
 }
