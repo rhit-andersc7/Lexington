@@ -5,7 +5,8 @@ void readString(char*);
 int mod(int, int);
 int div(int, int);
 void readSector(char*, int);
-
+handleInterrupt21(int, int, int, int);
+  
 int main() {
 
   char buffer[512];
@@ -18,6 +19,8 @@ int main() {
 
   readSector(buffer, 30);
   printString(buffer);
+
+  makeInterrupt21(0x21,0,0,0,0);
 
 	while(1); /* never forget this */
 	return 0;
@@ -118,4 +121,8 @@ void readSector(char *buffer, int sector){
     int head = mod(div(sector,18),2);
     int track = div(sector, 36);
 		interrupt(0x13, 513, buffer, track*256+relativeSector, head*256);
+}
+
+void handleInterrupt21(int ax, int bx, int cx, int dx){
+  printString("Hello World\0");
 }
