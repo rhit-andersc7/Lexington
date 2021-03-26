@@ -1,3 +1,4 @@
+/* Team Members: Cullen LaKemper, Cooper Anderson, Russel Staples*/
 void printString(char*);
 void printCharLocation(char, int, int);
 void printStringLocation(char*, int, int);
