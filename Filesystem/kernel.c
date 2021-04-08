@@ -57,10 +57,6 @@ int readFile(char* file, char* buffer){
 
 	readSector(directory, 2);
 
-	for(i = 0; i < 512; i+=32){
-		printString(&directory[i]);
-	}
-
 	for(i = 0; i < 16; i++){
 		offset = i*32;
 		for(j = 0; j < 6; j++){
@@ -71,9 +67,9 @@ int readFile(char* file, char* buffer){
 		if(j==6 || (file[j]=='\0' && directory[j+offset]=='\0')){
 			
 			j=6;
-
 			while(j<32 && directory[offset+j]!=0){
 				readSector(buffer+(j-6)*512, directory[offset+j]);
+				j++;
 			}
 				
 			return j-6+1;
