@@ -1,13 +1,3 @@
-void printString(char*);
-void printCharLocation(char, int, int);
-void printStringLocation(char*, int, int);
-void readString(char*);
-int mod(int, int);
-int div(int, int);
-void readSector(char*, int);
-void handleInterrupt21(int, int, int, int);
-void readFile(char*, char*);  
-
 #include "kernel.h"
 #include "./builtin.h"
 
