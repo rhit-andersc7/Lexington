@@ -1,9 +1,14 @@
 DIRS=bin obj
 $(shell mkdir -p $(DIRS))
 
-all: bin/kernel bin/loadFile
+all: loadFiles
+
+loadFiles: bin/loadFile bin/kernel
+	./bin/loadFile message.txt
+	./bin/loadFile bigmess.txt
 
 bin/kernel: obj/kernel.o obj/kernel_asm.o lexington.img
+	echo $(shell pwd)
 	# mkdir -p bin
 	ld86 -o bin/kernel -d obj/kernel.o obj/kernel_asm.o
 	dd if=bin/kernel of=lexington.img bs=512 conv=notrunc seek=3
@@ -36,7 +41,7 @@ lexington.img: obj/bootload
 clean:
 	rm -rf bin obj lexington.img
 
-run: bin/kernel
+run:
 	qemu-system-i386 -fda lexington.img -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot order=a
 
 # To build in docker container:
