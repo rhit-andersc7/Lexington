@@ -21,6 +21,10 @@ int main() {
 	return 0;
 }
 
+void terminate(){
+	while(1);
+}
+
 void executeProgram(char* name, int segment){
 	char error[2];
 	char buffer[13312];
@@ -176,6 +180,9 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
 			break;
 		case 4:
 			executeProgram(bx,cx);
+			break;
+		case 5:
+			terminate();
 			break;
 		default:
 			printString("Error Not a Function!\0");

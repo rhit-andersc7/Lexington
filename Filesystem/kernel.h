@@ -8,3 +8,4 @@ void readSector(char* buffer, int sector);
 void handleInterrupt21(int ax, int bx, int cx, int dx);
 int readFile(char*, char*);
 void executeProgram(char*, int);
+void terminate();
