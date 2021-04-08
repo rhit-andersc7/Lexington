@@ -1,3 +1,13 @@
+void printString(char*);
+void printCharLocation(char, int, int);
+void printStringLocation(char*, int, int);
+void readString(char*);
+int mod(int, int);
+int div(int, int);
+void readSector(char*, int);
+void handleInterrupt21(int, int, int, int);
+void readFile(char*, char*);  
+
 #include "kernel.h"
 #include "./builtin.h"
 
@@ -9,21 +19,34 @@
  */
 
 int main() {
-	char buffer[512];
-	char line[80];
 
-	printStringLocation("Hello World\0", 0, 0);
+  char buffer[13312];
+  makeInterrupt21();
 
-	makeInterrupt21();
-	interrupt(0x21, 0, "Enter line:\0", 0, 0);
-	interrupt(0x21, 1, line, 0, 0);
-	interrupt(0x21, 0, line, 0, 0);
-	interrupt(0x21, 2, buffer, 30, 0);
-	interrupt(0x21, 0, buffer, 0, 0);
+  // 0 is print, 1 is read, 2 is readSector
+  interrupt(0x21, 3, "messag", buffer);
 
-	/* never forget this */
-	while (1) {}
+
+
+
+
+
+
+
+
+
+  //char line[80];
+  // interrupt(0x21,0,"Enter line:\0",0,0);
+ // interrupt(0x21,1,line,0,0);
+ // interrupt(0x21,0,line,0,0);
+ // interrupt(0x21,2,buffer,30);
+ // interrupt(0x21,0,buffer,0);
+  while(1); /* never forget this */
 	return 0;
+}
+
+void readFile(char* file, char* buffer){
+
 }
 
 void printString(char* text) {
