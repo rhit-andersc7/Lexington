@@ -56,7 +56,11 @@ int readFile(char* file, char* buffer){
 	notFoundMessage[1] = '\0';
 
 	readSector(directory, 2);
-	
+
+	for(i = 0; i < 512; i+=32){
+		printString(directory[i]);
+	}
+
 	for(i = 0; i < 16; i++){
 		offset = i*32;
 		for(j = 0; j < 6; j++){
