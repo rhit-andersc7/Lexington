@@ -8,40 +8,51 @@
  * - Russel Staples
  */
 
+#define SECTOR_SIZE 512
+
 int main() {
 
-  char buffer[13312];
-  makeInterrupt21();
+	char buffer[13312];
+	makeInterrupt21();
 
-  // 0 is print, 1 is read, 2 is readSector
-  interrupt(0x21, 3, "messag\0", buffer, 0);
+	interrupt(0x21, 3, "messag\0", buffer, 0);
 	interrupt(0x21, 0, buffer, 0, 0);
 
-
-
-
-
-
-
-
-
-  //char line[80];
-  // interrupt(0x21,0,"Enter line:\0",0,0);
- // interrupt(0x21,1,line,0,0);
- // interrupt(0x21,0,line,0,0);
- // interrupt(0x21,2,buffer,30);
- // interrupt(0x21,0,buffer,0);
-  while(1); /* never forget this */
+	while(1); /* never forget this */
 	return 0;
 }
 
-void readFile(char* file, char* buffer){
-	char directory[512];
+void readFile(char* file, char* buffer){	
+	char notFoundMessage[2];
+	char directory[SECTOR_SIZE];
+	int i;
+	int offset;
+	int j;
 
-	interrupt(0x21, 2, buffer, 2);
-	
+	notFoundMessage[0] = 'N';
+	notFoundMessage[1] = '\0';
 
+	readSector(directory, 2);
 	
+	for(i = 0; i < 16; i++){
+		offset = i*32;
+		for(j = 0; j < 6; j++){
+			if(directory[j+offset]!=file[j]){
+				break;
+			}
+		}
+		if(j==6 || (file[j]=='\0' && directory[j+offset]=='\0')){
+			
+			j=6;
+
+			while(j<32 && directory[offset+j]!=0){
+				readSector(buffer+(j-6)*512, directory[offset+j]);
+			}
+				
+			return;
+		}
+	}
+	printString(notFoundMessage);
 }
 
 void printString(char* text) {
