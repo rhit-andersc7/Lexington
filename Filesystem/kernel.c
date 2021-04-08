@@ -58,7 +58,7 @@ int readFile(char* file, char* buffer){
 	readSector(directory, 2);
 
 	for(i = 0; i < 512; i+=32){
-		printString(directory[i]);
+		printString(&directory[i]);
 	}
 
 	for(i = 0; i < 16; i++){
