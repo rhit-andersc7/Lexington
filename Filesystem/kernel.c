@@ -15,9 +15,8 @@ int main() {
 	char buffer[13312];
 	makeInterrupt21();
 
-	interrupt(0x21, 3, "messag\0", buffer, 0);
-	interrupt(0x21, 0, buffer, 0, 0);
-
+	interrupt(0x21, 4, “tstprg\0”, 0x2000, 0);
+	
 	while(1); /* never forget this */
 	return 0;
 }
