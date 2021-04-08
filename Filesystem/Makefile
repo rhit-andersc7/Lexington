@@ -1,16 +1,22 @@
 DIRS=bin obj
 $(shell mkdir -p $(DIRS))
 
-all: bin/kernel
+all: bin/kernel bin/loadFile
 
 bin/kernel: obj/kernel.o obj/kernel_asm.o lexington.img
 	# mkdir -p bin
 	ld86 -o bin/kernel -d obj/kernel.o obj/kernel_asm.o
 	dd if=bin/kernel of=lexington.img bs=512 conv=notrunc seek=3
 
+bin/loadFile: obj/loadFile.o
+	gcc obj/loadFile.o -o bin/loadFile	
+
 obj/bootload: bootload.asm
 	# mkdir -p obj
 	nasm bootload.asm -o obj/bootload
+
+obj/loadFile.o: loadFile.c
+	gcc -c -o obj/loadFile.o loadFile.c
 
 obj/kernel.o: kernel.c kernel.h builtin.h
 	# mkdir -p obj
