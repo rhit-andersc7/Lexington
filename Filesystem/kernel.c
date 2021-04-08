@@ -149,7 +149,8 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
 			readSector(bx, cx);
 			break;
 		case 3:
-			readSector(bx, cx);
+			readFile(bx, cx);
+			break;
 		default:
 			printString("Error Not a Function!\0");
 	}
