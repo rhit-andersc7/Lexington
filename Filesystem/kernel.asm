@@ -103,52 +103,52 @@ jump:	jmp #0x0000:0x0000	;and start running (the first 0000 is changed above)
 ;printhex is used for debugging only
 ;it prints out the contents of ax in hexadecimal
 _printhex:
-	push bx
-	push ax
-	push ax
-	push ax
-	push ax
-	mov al,ah
-	mov ah,#0xe
-	mov bx,#7
-	shr al,#4
-	and al,#0xf
-	cmp al,#0xa
-	jb ph1
-	add al,#0x7
+        push bx
+        push ax
+        push ax
+        push ax
+        push ax
+        mov al,ah
+        mov ah,#0xe
+        mov bx,#7
+        shr al,#4
+        and al,#0xf
+        cmp al,#0xa
+        jb ph1
+        add al,#0x7
 ph1:    add al,#0x30
-	int 0x10
+        int 0x10
 
-	pop ax
-	mov al,ah
-	mov ah,#0xe
-	and al,#0xf
-	cmp al,#0xa
-	jb ph2
-	add al,#0x7
+        pop ax
+        mov al,ah
+        mov ah,#0xe
+        and al,#0xf
+        cmp al,#0xa
+        jb ph2
+        add al,#0x7
 ph2:    add al,#0x30
-	int 0x10
+        int 0x10
 
-	pop ax
-	mov ah,#0xe
-	shr al,#4
-	and al,#0xf
-	cmp al,#0xa
-	jb ph3
-	add al,#0x7
+        pop ax
+        mov ah,#0xe
+        shr al,#4
+        and al,#0xf
+        cmp al,#0xa
+        jb ph3
+        add al,#0x7
 ph3:    add al,#0x30
-	int 0x10
+        int 0x10
 
-	pop ax
-	mov ah,#0xe
-	and al,#0xf
-	cmp al,#0xa
-	jb ph4
-	add al,#0x7
+        pop ax
+        mov ah,#0xe
+        and al,#0xf
+        cmp al,#0xa
+        jb ph4
+        add al,#0x7
 ph4:    add al,#0x30
-	int 0x10
+        int 0x10
 
-	pop ax
-	pop bx
-	ret
+        pop ax
+        pop bx
+        ret
 

@@ -10,7 +10,7 @@ gen:
 		--build-arg GROUP_ID=$(GROUP_ID) .
 
 build:
-	docker run -v $(ROOT_DIR):/lexington:z --rm lexington make input_output
+	docker run -v $(ROOT_DIR):/lexington:z --rm lexington make filesystem
 
 dev:
 	docker run -v $(ROOT_DIR):/lexington:z -it --rm lexington fish
@@ -22,3 +22,7 @@ run:
 input_output:
 	make -C ./InputOutput
 	ln -sf ./InputOutput/lexington.img lexington.img
+
+filesystem:
+	make -C ./Filesystem
+	ln -sf ./Filesystem/lexington.img lexington.img
