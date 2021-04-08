@@ -15,7 +15,7 @@ int main() {
 	char buffer[13312];
 	makeInterrupt21();
 
-	interrupt(0x21, 4, “tstprg\0”, 0x2000, 0);
+	interrupt(0x21, 4, "tstprg\0", 0x2000, 0);
 	
 	while(1); /* never forget this */
 	return 0;
@@ -36,7 +36,7 @@ void executeProgram(char* name, int segment){
 		printString(error);
 		return;
 	}
-
+	
 	for(i=0; i<fileSize; i++){
 		putInMemory(segment, i, buffer[i]);
 	}
@@ -71,7 +71,7 @@ int readFile(char* file, char* buffer){
 				j++;
 			}
 				
-			return j-6+1;
+			return (j-5)*512;
 		}
 	}
 	printString(notFoundMessage);
