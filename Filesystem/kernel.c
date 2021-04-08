@@ -24,8 +24,8 @@ int main() {
   makeInterrupt21();
 
   // 0 is print, 1 is read, 2 is readSector
-  interrupt(0x21, 3, "messag", buffer);
-
+  interrupt(0x21, 3, "messag\0", buffer, 0);
+	interrupt(0x21, 0, buffer, 0, 0);
 
 
 
@@ -46,7 +46,12 @@ int main() {
 }
 
 void readFile(char* file, char* buffer){
+	char directory[512];
 
+	interrupt(0x21, 2, buffer, 2);
+	
+
+	
 }
 
 void printString(char* text) {
@@ -142,6 +147,8 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
 		case 2:
 			readSector(bx, cx);
 			break;
+		case 3:
+			readSector(bx, cx);
 		default:
 			printString("Error Not a Function!\0");
 	}
