@@ -24,7 +24,7 @@ int main() {
 
 void executeProgram(char* name, int segment){
 	char error[2];
-	char* buffer[13312];
+	char buffer[13312];
 	int i;
 	int fileSize;
 
