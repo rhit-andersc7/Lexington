@@ -22,7 +22,30 @@ int main() {
 	return 0;
 }
 
-void readFile(char* file, char* buffer){	
+void executeProgram(char* name, int segment){
+	char error[2];
+	char* buffer[13312];
+	int i;
+	int fileSize;
+
+	error[0] = 'X';
+	error[1] = '\0';
+
+	fileSize = readFile(name, buffer);
+
+	if(fileSize == -1){
+		printString(error);
+		return;
+	}
+
+	for(i=0; i<fileSize; i++){
+		putInMemory(segment, i, buffer[i]);
+	}
+
+	launchProgram(segment);
+}
+
+int readFile(char* file, char* buffer){	
 	char notFoundMessage[2];
 	char directory[SECTOR_SIZE];
 	int i;
@@ -49,10 +72,11 @@ void readFile(char* file, char* buffer){
 				readSector(buffer+(j-6)*512, directory[offset+j]);
 			}
 				
-			return;
+			return j-6+1;
 		}
 	}
 	printString(notFoundMessage);
+	return -1;
 }
 
 void printString(char* text) {
@@ -150,6 +174,9 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
 			break;
 		case 3:
 			readFile(bx, cx);
+			break;
+		case 4:
+			executeProgram(bx,cx);
 			break;
 		default:
 			printString("Error Not a Function!\0");
