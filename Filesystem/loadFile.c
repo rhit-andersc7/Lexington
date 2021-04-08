@@ -26,9 +26,9 @@ int main(int argc, char* argv[]) {
 
 	// open the floppy image
 	FILE* floppy;
-	floppy = fopen("floppya.img", "r+");
+	floppy = fopen("lexington.img", "r+");
 	if (floppy == 0) {
-		printf("floppya.img not found\n");
+		printf("lexington.img not found\n");
 		return 0;
 	}
 
