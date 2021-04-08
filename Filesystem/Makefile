@@ -24,8 +24,8 @@ lexington.img: obj/bootload
 	dd if=/dev/zero of=lexington.img bs=512 count=2880
 	dd if=obj/bootload of=lexington.img bs=512 count=1 conv=notrunc
 	dd if=message.txt of=lexington.img bs=512 count=1 seek=30 conv=notrunc
-	dd if=map.img of=floppya.img bs=512 count=1 seek=1 conv=notrunc
-	dd if=dir.img of=floppya.img bs=512 count=1 seek=2 conv=notrunc
+	dd if=map.img of=lexington.img bs=512 count=1 seek=1 conv=notrunc
+	dd if=dir.img of=lexington.img bs=512 count=1 seek=2 conv=notrunc
 
 clean:
 	rm -rf bin obj lexington.img
