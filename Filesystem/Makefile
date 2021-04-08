@@ -6,6 +6,7 @@ all: loadFiles
 loadFiles: bin/loadFile bin/kernel
 	./bin/loadFile message.txt
 	./bin/loadFile bigmess.txt
+	./bin/loadFile tstprg
 
 bin/kernel: obj/kernel.o obj/kernel_asm.o lexington.img
 	echo $(shell pwd)
