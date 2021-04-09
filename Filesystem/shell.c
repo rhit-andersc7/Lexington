@@ -28,7 +28,7 @@ void runCommand(char* line){
 		copyCommand(command[1], command[2]);
 	}
 	else{
-		interrupt(0x21, "Bad Command!", error, 0, 0);
+		interrupt(0x21, 0,"Bad Command!", 0, 0);
 	}
 }
 
