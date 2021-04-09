@@ -6,6 +6,8 @@ int main(){
 
 	while(1){
 		interrupt(0x21, 0, "Lexington> \0", 0, 0);
+		interrupt(0x21, 1, line, 0, 0);
+		runCommand(line);
 	}
 }
 
