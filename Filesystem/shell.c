@@ -5,7 +5,7 @@ int main(){
 	char line[120];
 
 	while(1){
-		interrupt(0x21, 0, "Lexington> \0", 0, 0);
+		print("Lexington> \0");
 		interrupt(0x21, 1, line, 0, 0);
 		runCommand(line);
 	}
@@ -16,9 +16,8 @@ void runCommand(char* line){
 	int i;
 	
 	parseCommand(command, line);
-	
 	if(stringEqual(command[0],"type\0")){
-		typeCommand(command[0]);
+		typeCommand(command[1]);
 	}
 	else if(stringEqual(command[0],"execute\0")){
 		executeCommand(command[1]);
@@ -30,28 +29,40 @@ void runCommand(char* line){
 		copyCommand(command[1], command[2]);
 	}
 	else{
-		interrupt(0x21, 0,"Bad Command!", 0, 0);
+		print("Bad Command!\n\0");
 	}
 }
 
 void parseCommand(char** command, char* line){
 	int i;
-	int spaces;
-	char c;
+	char cmd[120];
+	char arg1[120];
+	char arg2[120];
 
 	i = 0;
-	spaces = 0;
-	c = line[i];
+	i += getTillChar(line, cmd, ' ');
+	i += getTillChar(line+i, arg1, ' ');	
+	getTillChar(line+i, arg2, '\0');
 
-	while(c != '\0'){
-		if(c==' '){
-			spaces++;
-		}
-		else{
-			command[spaces][i] = c;
-		}
-		c = line[++i];
+	command[0] = cmd;
+	command[1] = arg1;
+	command[2] = arg2;
+}
+
+int getTillChar(char* in, char* out, char c){
+	int i;
+	char current;
+
+	i=0;
+	current = in[i];
+	while(current!=c && current!='\0'){
+		out[i] = current;
+		current = in[++i];
 	}
+
+	out[i] = '\0';
+
+	return i;
 }
 
 int stringEqual(char* s1, char* s2){
@@ -66,11 +77,16 @@ int stringEqual(char* s1, char* s2){
 	return 1;
 }
 void typeCommand(char* filename){
-        interrupt(0x21, 3, filename, 0x2000, 0);
+	print(filename);
+	//interrupt(0x21, 3, filename, 0x2000, 0);
 }
 
 void executeCommand(char* filename){
-        interrupt(0x21, 4, filename, 0x2000, 0);
+    interrupt(0x21, 4, filename, 0x2000, 0);
+}
+
+void print(char* line){
+    interrupt(0x21, 0, line, 0, 0);
 }
 
 void dirCommand(){
