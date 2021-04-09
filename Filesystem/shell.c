@@ -79,7 +79,10 @@ int stringEqual(char* s1, char* s2){
 	return 1;
 }
 void typeCommand(char* filename){
-	interrupt(0x21, 3, filename, 0x2000, 0);
+	char buffer[13312];
+
+	interrupt(0x21, 3, filename, buffer, 0);
+	print(buffer);
 }
 
 void executeCommand(char* filename){
@@ -112,19 +115,7 @@ int mod(int a, int b) {
 }
 
 void dirCommand(){
-/*
-	int i;
-	int j;
-	int offset;
-	char directory[];
 
-		for(i = 0; i < 16; i++){
-                offset = i*32;
-                for(j = 0; j < 6; j++){
-        		interrupt(0x21, 3, directory[j+offset], 0x2000, 0);
-                }
-        }
-*/
 }
 
 void copyCommand(char* file, char* newLocation){
