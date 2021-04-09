@@ -12,12 +12,12 @@
 
 int main() {
 
-	char buffer[13312];
 	makeInterrupt21();
 
-	interrupt(0x21, 4, "tstprg\0", 0x2000, 0);
-	
-	while(1); /* never forget this */
+	while(1){
+		interrupt(0x21, 4, "shell\0", 0x2000, 0);
+	}
+
 	return 0;
 }
 
