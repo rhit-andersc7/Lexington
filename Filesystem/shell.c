@@ -11,7 +11,7 @@ int main(){
 }
 
 void runCommand(char* line){
-	char** command[3];
+	char* command[3];
 	char error[] = "Bad Command!\0";
 	int i;
 	
@@ -27,14 +27,14 @@ void runCommand(char* line){
 		dirCommand();
 	}
 	else if(stringEqual(command[0],"copy\0")){
-		copyCommand(command[1], command[1]);
+		copyCommand(command[1], command[2]);
 	}
 	else{
 		interrupt(0x21, 0, error, 0, 0);
 	}
 }
 
-void parseCommand(char** parsedCommand, char* line){
+void parseCommand(char** command, char* line){
 	int i;
 	int spaces;
 	char c;
@@ -48,7 +48,7 @@ void parseCommand(char** parsedCommand, char* line){
 			spaces++;
 		}
 		else{
-			parsedCommand[spaces][i] = c;
+			command[spaces][i] = c;
 		}
 		c = line[++i];
 	}
@@ -74,12 +74,21 @@ void executeCommand(char* filename){
 }
 
 void dirCommand(){
-        for(i = 0; i < 16; i++){
+/*
+	int i;
+	int j;
+	int offset;
+	char directory[];
+
+		for(i = 0; i < 16; i++){
                 offset = i*32;
                 for(j = 0; j < 6; j++){
         		interrupt(0x21, 3, directory[j+offset], 0x2000, 0);
                 }
         }
-
+*/
 }
 
+void copyCommand(char* file, char* newLocation){
+
+}
