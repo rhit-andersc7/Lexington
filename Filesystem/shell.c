@@ -74,24 +74,12 @@ void executeCommand(char* filename){
 }
 
 void dirCommand(){
-/*        for(i = 0; i < 16; i++){
+        for(i = 0; i < 16; i++){
                 offset = i*32;
                 for(j = 0; j < 6; j++){
-                        if(directory[j+offset]!=file[j]){
-                                break;
-                        }
-                }
-                if(j==6 || (file[j]=='\0' && directory[j+offset]=='\0')){
-
-                        j=6;
-                        while(j<32 && directory[offset+j]!=0){
-                                readSector(buffer+(j-6)*512, directory[offset+j]);
-                                j++;
-                        }
-
-                        return (j-5)*512;
+        		interrupt(0x21, 3, directory[j+offset], 0x2000, 0);
                 }
         }
-*/
+
 }
 
