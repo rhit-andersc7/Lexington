@@ -1,19 +1,29 @@
-DIRS=bin obj
+DIRS=bin obj out
 $(shell mkdir -p $(DIRS))
 
-all: lexington.img bin/kernel # bin/shell
+all: lexington.img
 
+lexington.img: out/lexington.img bin/shell bin/loadFile
+	cp out/lexington.img lexington.img
+	./bin/loadFile message.txt
+	./bin/loadFile bigmess.txt
+	./bin/loadFile tstprg
+	cp bin/shell shell
+	./bin/loadFile shell
+	rm shell
+
+# Binary files {{{
 bin/kernel: obj/kernel.o obj/kernel_asm.o
 	ld86 -o bin/kernel -d obj/kernel.o obj/kernel_asm.o
-	dd if=bin/kernel of=lexington.img bs=512 conv=notrunc seek=3
 
 bin/shell: obj/shell.o obj/lib.o
-	ld86 -o shell -d obj/shell.o obj/lib.o
-	./bin/loadFile bin/shell
+	ld86 -o bin/shell -d obj/shell.o obj/lib.o
 
 bin/loadFile: obj/loadFile.o
 	gcc obj/loadFile.o -o bin/loadFile	
+# }}}
 
+# Object files {{{
 obj/bootload: bootload.asm
 	nasm bootload.asm -o obj/bootload
 
@@ -31,23 +41,18 @@ obj/kernel_asm.o: kernel.asm
 
 obj/lib.o: lib.asm
 	as86 lib.asm -o obj/lib.o
+# }}}
 
-lexington.img: obj/bootload
-	dd if=/dev/zero of=lexington.img bs=512 count=2880
-	dd if=obj/bootload of=lexington.img bs=512 count=1 conv=notrunc
-	dd if=message.txt of=lexington.img bs=512 count=1 seek=30 conv=notrunc
-	dd if=map.img of=lexington.img bs=512 count=1 seek=1 conv=notrunc
-	dd if=dir.img of=lexington.img bs=512 count=1 seek=2 conv=notrunc
-	make loadFiles
-
-loadFiles: bin/loadFile bin/shell
-	./bin/loadFile message.txt
-	./bin/loadFile bigmess.txt
-	./bin/loadFile tstprg
-	./bin/loadFile shell
+out/lexington.img: obj/bootload bin/kernel
+	dd if=/dev/zero of=out/lexington.img bs=512 count=2880
+	dd if=obj/bootload of=out/lexington.img bs=512 count=1 conv=notrunc
+	dd if=message.txt of=out/lexington.img bs=512 count=1 seek=30 conv=notrunc
+	dd if=map.img of=out/lexington.img bs=512 count=1 seek=1 conv=notrunc
+	dd if=dir.img of=out/lexington.img bs=512 count=1 seek=2 conv=notrunc
+	dd if=bin/kernel of=out/lexington.img bs=512 conv=notrunc seek=3
 
 clean:
-	rm -rf bin obj lexington.img
+	rm -rf bin obj out lexington.img
 
 run:
 	qemu-system-i386 -fda lexington.img -device isa-debug-exit,iobase=0xf4,iosize=0x04 -boot order=a
