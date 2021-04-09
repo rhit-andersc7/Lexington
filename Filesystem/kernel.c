@@ -22,7 +22,9 @@ int main() {
 }
 
 void terminate(){
-	while(1);
+	while(1){
+		interrupt(0x21, 4, "shell\0", 0x2000, 0);
+	}
 }
 
 void executeProgram(char* name, int segment){
