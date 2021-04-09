@@ -1,14 +1,14 @@
 DIRS=bin obj
 $(shell mkdir -p $(DIRS))
 
-all: lexington.img bin/kernel bin/shell
+all: lexington.img bin/kernel # bin/shell
 
 bin/kernel: obj/kernel.o obj/kernel_asm.o
 	ld86 -o bin/kernel -d obj/kernel.o obj/kernel_asm.o
 	dd if=bin/kernel of=lexington.img bs=512 conv=notrunc seek=3
 
 bin/shell: obj/shell.o obj/lib.o
-	ld86 -o bin/shell -d obj/shell.o obj/lib.o
+	ld86 -o shell -d obj/shell.o obj/lib.o
 	./bin/loadFile bin/shell
 
 bin/loadFile: obj/loadFile.o
@@ -40,10 +40,11 @@ lexington.img: obj/bootload
 	dd if=dir.img of=lexington.img bs=512 count=1 seek=2 conv=notrunc
 	make loadFiles
 
-loadFiles: bin/loadFile
+loadFiles: bin/loadFile bin/shell
 	./bin/loadFile message.txt
 	./bin/loadFile bigmess.txt
 	./bin/loadFile tstprg
+	./bin/loadFile shell
 
 clean:
 	rm -rf bin obj lexington.img
