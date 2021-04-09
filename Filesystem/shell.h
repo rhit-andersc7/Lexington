@@ -8,3 +8,4 @@ void dirCommand();
 void copyCommand(char*, char*);
 void print(char*);
 void printNum(int);
+int mod(int, int);

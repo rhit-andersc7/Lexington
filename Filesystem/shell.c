@@ -29,7 +29,7 @@ void runCommand(char* line){
 		copyCommand(command[1], command[2]);
 	}
 	else{
-		print("Bad Command!\n\0");
+		print("Bad Command!\r\n\0");
 	}
 }
 
@@ -40,8 +40,8 @@ void parseCommand(char** command, char* line){
 	char arg2[120];
 
 	i = 0;
-	i += getTillChar(line, cmd, ' ');
-	i += getTillChar(line+i, arg1, ' ');	
+	i += getTillChar(line, cmd, ' ')+1;
+	i += getTillChar(line+i, arg1, ' ')+1;	
 	getTillChar(line+i, arg2, '\0');
 
 	command[0] = cmd;
@@ -90,13 +90,24 @@ void print(char* line){
 }
 
 void printNum(int num){
+	char c[2];
+
+	c[1]='\0';
 
 	while(num > 0 ){
-		char c = (char) num%10 + 43;
+		c[0] = (char) mod(num,10) + 48;
 		num/=10;
-		print(&c);
+		print(c);
 	}
 
+}
+
+int mod(int a, int b) {
+	int temp = a;
+	while (temp >= b) {
+		temp -= b;
+	}
+	return temp;
 }
 
 void dirCommand(){
