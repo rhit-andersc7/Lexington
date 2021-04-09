@@ -2,17 +2,15 @@
 
 int main(){
 
-	char prompt[] = "Lexington> ";
 	char line[120];
 
 	while(1){
-		interrupt(0x21, 0, prompt, 0, 0);
+		interrupt(0x21, 0, "Lexington> \0", 0, 0);
 	}
 }
 
 void runCommand(char* line){
 	char* command[3];
-	char error[] = "Bad Command!\0";
 	int i;
 	
 	parseCommand(command, line);
@@ -30,7 +28,7 @@ void runCommand(char* line){
 		copyCommand(command[1], command[2]);
 	}
 	else{
-		interrupt(0x21, 0, error, 0, 0);
+		interrupt(0x21, "Bad Command!", error, 0, 0);
 	}
 }
 
