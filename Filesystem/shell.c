@@ -1,5 +1,7 @@
 #include "shell.h"
 
+#define SECTOR_SIZE 512
+
 int main(){
 
 	char line[120];
@@ -115,6 +117,18 @@ int mod(int a, int b) {
 }
 
 void dirCommand(){
+	char buffer[SECTOR_SIZE];
+	int i;
+
+	interrupt(0x21, 2, buffer, 2, 0);
+
+	for(i=1;i<16;i++){
+		if(buffer[i*32]!=0){
+			buffer[i*32+6]='\0';
+			print(buffer+i*32);
+			print(" \0");
+		}
+	}
 
 }
 
