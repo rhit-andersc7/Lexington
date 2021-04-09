@@ -16,6 +16,7 @@ void runCommand(char* line){
 	int i;
 	
 	parseCommand(command, line);
+	print("\n\r\0");
 	if(stringEqual(command[0],"type\0")){
 		typeCommand(command[1]);
 	}
@@ -29,8 +30,9 @@ void runCommand(char* line){
 		copyCommand(command[1], command[2]);
 	}
 	else{
-		print("Bad Command!\n\0");
+		print("Bad Command!\0");
 	}
+	print("\n\r\0");
 }
 
 void parseCommand(char** command, char* line){
