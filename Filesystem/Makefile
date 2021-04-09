@@ -8,6 +8,7 @@ lexington.img: out/lexington.img bin/shell bin/loadFile
 	./bin/loadFile message.txt
 	./bin/loadFile bigmess.txt
 	./bin/loadFile tstprg
+	./bin/loadFile tstpr2
 	cp bin/shell shell
 	./bin/loadFile shell
 	rm shell
