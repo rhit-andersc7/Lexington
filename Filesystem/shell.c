@@ -7,26 +7,27 @@ int main(){
 
 	while(1){
 		interrupt(0x21, 0, prompt, 0, 0);
+	}
 }
 
 void runCommand(char* line){
-	char** parsedCommand[3];
+	char** command[3];
 	char error[] = "Bad Command!\0";
 	int i;
 	
-	parseCommand(parsedCommand, line);
+	parseCommand(command, line);
 	
-	if(stringEqual(parseCommand[0],"type\0")){
-		type(arg1);
+	if(stringEqual(command[0],"type\0")){
+		typeCommand(command[0]);
 	}
-	else if(stringEqual(parseCommand[0],"execute\0")){
-		execute(arg1);
+	else if(stringEqual(command[0],"execute\0")){
+		executeCommand(command[1]);
 	}
-	else if(stringEqual(parseCommand[0],"dir\0")){
-		dir();
+	else if(stringEqual(command[0],"dir\0")){
+		dirCommand();
 	}
-	else if(stringEqual(parseCommand[0],"copy\0")){
-		copy(arg1, arg2);
+	else if(stringEqual(command[0],"copy\0")){
+		copyCommand(command[1], command[1]);
 	}
 	else{
 		interrupt(0x21, 0, error, 0, 0);
