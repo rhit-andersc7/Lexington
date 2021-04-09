@@ -89,6 +89,16 @@ void print(char* line){
     interrupt(0x21, 0, line, 0, 0);
 }
 
+void printNum(int num){
+
+	while(num > 0 ){
+		char c = (char) num%10 + 43;
+		num/=10;
+		print(&c);
+	}
+
+}
+
 void dirCommand(){
 /*
 	int i;
