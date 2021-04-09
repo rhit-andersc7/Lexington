@@ -214,10 +214,18 @@ void writeFile(char* name, char* contents, int sectors){
 					}
 				}
 			}
+
 			if(k == SECTOR_SIZE){
 				return;
 			}
 			
+			for(j=j;j<32;j++){
+				dir[j]=0x00;
+			}
+
+			writeSector(dir, 2);
+			writeSector(map, 1);
+
 			return;
 		}
 	}
@@ -246,7 +254,7 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
 			break;
 		case 6:
 			writeSector(bx, cx);
-			break;
+			break;	
 		case 8:
 			writeFile(bx, cx, dx);
 			break;

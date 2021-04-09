@@ -136,7 +136,13 @@ void dirCommand(){
 void copyCommand(char* file, char* newLocation){
 	char buffer[13312];
 	char dir[512];
+	int i;
 
 	interrupt(0x21, 3, file, buffer, 0);
-	interrupt(0x21, 8, newLocation, buffer,  2);
+
+	i = 0; 
+	while(buffer[i]!='\0'){
+		i++;
+	}
+	interrupt(0x21, 8, newLocation, buffer,  i/512 + 1);
 }
