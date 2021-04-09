@@ -137,12 +137,29 @@ void copyCommand(char* file, char* newLocation){
 	char buffer[13312];
 	char dir[512];
 	int i;
+	int j;
+	int offset;
 
 	interrupt(0x21, 3, file, buffer, 0);
+	interrupt(0x21, 2, dir, 2, 0);
 
-	i = 0; 
-	while(buffer[i]!='\0'){
-		i++;
+	for(i=0; i<16; i++){
+		offset = i*32;
+		
+		for(j = 0; j < 6; j++){
+			if(dir[j+offset]!=file[j]){
+				break;
+			}
+		}
+		if((j==6 && file[j+1]=='\0') || (file[j]=='\0' && dir[j+offset]=='\0')){
+			
+			j=6;
+			while(dir[offset+j]!=0x00){
+				j++;
+			}
+			break;
+		}
 	}
-	interrupt(0x21, 8, newLocation, buffer,  i/512 + 1);
+
+	interrupt(0x21, 8, newLocation, buffer,  (j-6));
 }
