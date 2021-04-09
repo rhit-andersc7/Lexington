@@ -134,5 +134,9 @@ void dirCommand(){
 }
 
 void copyCommand(char* file, char* newLocation){
+	char buffer[13312];
+	char dir[512];
 
+	interrupt(0x21, 3, file, buffer, 0);
+	interrupt(0x21, 8, newLocation, buffer,  2);
 }

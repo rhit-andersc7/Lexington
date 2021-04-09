@@ -167,6 +167,63 @@ void readSector(char* buffer, int sector) {
 	interrupt(0x13, 513, buffer, track*256+relativeSector, head*256);
 }
 
+void writeSector(char* buffer, int sector){
+	int relativeSector = mod(sector, 18) + 1;
+	int head = mod(div(sector, 18), 2);
+	int track = div(sector, 36);
+	interrupt(0x13, (3 << 8) + 1, buffer, track*256+relativeSector, head*256);
+}
+
+void writeFile(char* name, char* contents, int sectors){
+	char error[2];
+	char map[SECTOR_SIZE];
+	char dir[SECTOR_SIZE];
+	int i;
+	int j;
+	int k;
+	int offset;
+
+	error[0] = 'F';
+	error[1] = '\0';
+
+	readSector(map, 1);
+	readSector(dir, 2);
+
+	for(i=1;i<16;i++){
+		offset = i*32;
+		if(dir[offset]==0x00){
+			for(j=0; j<6; j++){
+				dir[offset+j] = name[j];
+				if(name[j]=='\0'){
+					break;
+				}
+			}
+	
+			for(j=j;j<6;j++){
+				dir[offset+j]='\0';
+			}
+			i = 0;
+			for(k=0; k<SECTOR_SIZE; k++){
+				if(map[k]==0x00){
+					map[k] = 0xFF;
+					dir[offset+j] = k;
+					j++;
+					writeSector(contents+i*SECTOR_SIZE, k);
+					if(++i == sectors){
+						break;
+					}
+				}
+			}
+			if(k == SECTOR_SIZE){
+				return;
+			}
+			
+			return;
+		}
+	}
+
+}
+
 void handleInterrupt21(int ax, int bx, int cx, int dx) {
 	switch(ax) {
 		case 0:
@@ -186,6 +243,12 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
 			break;
 		case 5:
 			terminate();
+			break;
+		case 6:
+			writeSector(bx, cx);
+			break;
+		case 8:
+			writeFile(bx, cx, dx);
 			break;
 		default:
 			printString("Error Not a Function!\0");

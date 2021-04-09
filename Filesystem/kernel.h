@@ -9,3 +9,5 @@ void handleInterrupt21(int ax, int bx, int cx, int dx);
 int readFile(char*, char*);
 void executeProgram(char*, int);
 void terminate();
+void writeSector(char*, int);
+void writeFile(char*, char*, int);
