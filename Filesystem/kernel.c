@@ -69,7 +69,7 @@ int readFile(char* file, char* buffer){
 				break;
 			}
 		}
-		if(j==6 || (file[j]=='\0' && directory[j+offset]=='\0')){
+		if((j==6 && file[j+1]=='\0') || (file[j]=='\0' && directory[j+offset]=='\0')){
 			
 			j=6;
 			while(j<32 && directory[offset+j]!=0){
@@ -81,6 +81,7 @@ int readFile(char* file, char* buffer){
 		}
 	}
 	printString(notFoundMessage);
+	buffer[0]='\0';
 	return -1;
 }
 

@@ -85,6 +85,7 @@ void typeCommand(char* filename){
 
 	interrupt(0x21, 3, filename, buffer, 0);
 	print(buffer);
+	
 }
 
 void executeCommand(char* filename){
