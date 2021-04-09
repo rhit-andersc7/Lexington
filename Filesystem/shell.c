@@ -2,10 +2,8 @@
 
 int main(){
 
-	char prompt[5];
+	char prompt[] = "Lexington> ";
 	char line[120];
-
-	prompt = "Lexington> ";
 
 	while(1){
 		interrupt(0x21, 0, prompt, 0, 0);
@@ -17,10 +15,8 @@ int main(){
 
 void runCommand(char* line){
 	char** parsedCommand[3];
-	char error[3];
+	char error[] = "Bad Command!\0";
 	int i;
-	
-	error = "Bad Command!"
 	
 	parseCommand(parsedCommand, line);
 	
