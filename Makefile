@@ -29,8 +29,8 @@ bin/loadFile: obj/loadFile.o
 # }}}
 
 # Object files {{{
-obj/bootload: bootload.asm
-	nasm bootload.asm -o obj/bootload
+obj/bootload: asm/bootload.asm
+	nasm asm/bootload.asm -o obj/bootload
 
 obj/loadFile.o: src/loadFile.c
 	gcc -c -o obj/loadFile.o src/loadFile.c
@@ -41,11 +41,11 @@ obj/kernel.o: src/kernel.c src/kernel.h src/builtin.h
 obj/shell.o: src/shell.c src/shell.h
 	bcc -ansi -c -o obj/shell.o src/shell.c
 
-obj/kernel_asm.o: kernel.asm
-	as86 kernel.asm -o obj/kernel_asm.o
+obj/kernel_asm.o: asm/kernel.asm
+	as86 asm/kernel.asm -o obj/kernel_asm.o
 
-obj/lib.o: lib.asm
-	as86 lib.asm -o obj/lib.o
+obj/lib.o: asm/lib.asm
+	as86 asm/lib.asm -o obj/lib.o
 # }}}
 
 out/lexington.img: obj/bootload bin/kernel
