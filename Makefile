@@ -32,14 +32,14 @@ bin/loadFile: obj/loadFile.o
 obj/bootload: bootload.asm
 	nasm bootload.asm -o obj/bootload
 
-obj/loadFile.o: loadFile.c
-	gcc -c -o obj/loadFile.o loadFile.c
+obj/loadFile.o: src/loadFile.c
+	gcc -c -o obj/loadFile.o src/loadFile.c
 
-obj/kernel.o: kernel.c kernel.h builtin.h
-	bcc -ansi -c -o obj/kernel.o kernel.c
+obj/kernel.o: src/kernel.c src/kernel.h src/builtin.h
+	bcc -ansi -c -o obj/kernel.o src/kernel.c
 
-obj/shell.o: shell.c shell.h
-	bcc -ansi -c -o obj/shell.o shell.c
+obj/shell.o: src/shell.c src/shell.h
+	bcc -ansi -c -o obj/shell.o src/shell.c
 
 obj/kernel_asm.o: kernel.asm
 	as86 kernel.asm -o obj/kernel_asm.o
