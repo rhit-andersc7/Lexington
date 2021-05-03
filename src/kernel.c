@@ -12,11 +12,16 @@
 #define NUM_PROCESSES 8
 
 Process processes[NUM_PROCESSES];
+int currentProcess;
 
 int main() {
 
 	makeInterrupt21();
 	makeTimerInterrupt();
+
+	for (int i = 0; i < NUM_PROCESSES; i++) {
+		processes[i] = (Process) { 0, 0xff00 };
+	}
 
 	while(1){
 		interrupt(0x21, 4, "shell\0", 0x2000, 0);
