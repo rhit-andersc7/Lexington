@@ -23,20 +23,19 @@ int main() {
 		processes[i].sector = (i + 2) * 0x1000;
 	}
 
+	currentProcess = -1;
 	makeInterrupt21();
+	interrupt(0x21, 4, "shell\0", 0x2000, 0);
 	makeTimerInterrupt();
 
-	while(1){
-		interrupt(0x21, 4, "shell\0", 0x2000, 0);
-	}
+	while(1) {}
 
 	return 0;
 }
 
 void terminate(){
-	while(1){
-		interrupt(0x21, 4, "shell\0", 0x2000, 0);
-	}
+	processes[currentProcess].active = 0;
+	while(1) {}
 }
 
 void executeProgram(char* name){
@@ -44,7 +43,8 @@ void executeProgram(char* name){
   char buffer[13312];
   int i;
   int fileSize;
-  int segment = -1;
+  int segment;
+	int s;
 
   error[0] = 'X';
   error[1] = '\0';
@@ -56,28 +56,29 @@ void executeProgram(char* name){
     return;
   }
 
-  for(i=0; i<NUM_PROCESSES; i++){
-    if(processes[i].active == 0){
-			processes[i].active = 1;
-      processes[i].pointer = 0xff00;
-			/* segment = processes[i].sector; */
-			segment = (i + 2) * 0x1000;
-      break;
+  for(s=0; s<NUM_PROCESSES; s++){
+    if(processes[s].active == 0){
+			break;
     }
   }
-	
-  error[0] = 'Y';
 
-	if (segment == -1) {
+	if (s == NUM_PROCESSES) {
+		error[0] = 'Y';
 		printString(error);
 		return;
 	}
+
+	processes[s].active = 1;
+	processes[s].pointer = 0xff00;
+	/* segment = processes[s].sector; */
+	segment = (s + 2) * 0x1000;
+	currentProcess = s;
 
   for(i=0; i<fileSize; i++){
     putInMemory(segment, i, buffer[i]);
   }
 
-  launchProgram(segment);
+  initializeProgram(segment);
 }
 
 int readFile(char* file, char* buffer){	
@@ -294,6 +295,22 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
 }
 
 void handleTimerInterrupt(int segment, int sp) {
-/*printString("tic\0");*/
-	returnFromTimer(segment, sp);
+	int active;
+
+	if (currentProcess != -1) {
+		processes[currentProcess].pointer = sp;
+	}
+
+	while (1) {
+		currentProcess = mod(currentProcess + 1, NUM_PROCESSES);
+		active = processes[currentProcess].active;
+		if (active == 1) { break; }
+		else if (active == 2) {
+		}
+	}
+
+	returnFromTimer(
+		(currentProcess + 2) * 0x1000,
+		processes[currentProcess].pointer
+	);
 }
