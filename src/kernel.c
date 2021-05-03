@@ -13,6 +13,7 @@
 int main() {
 
 	makeInterrupt21();
+	makeTimerInterrupt();
 
 	while(1){
 		interrupt(0x21, 4, "shell\0", 0x2000, 0);
@@ -264,4 +265,6 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
 }
 
 void handleTimerInterrupt(int segment, int sp) {
+	printString("tic\0");
+	returnFromTimer(segment, sp);
 }
