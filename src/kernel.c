@@ -15,12 +15,14 @@ Process processes[NUM_PROCESSES];
 int currentProcess;
 
 int main() {
+	int i;
 
 	makeInterrupt21();
 	makeTimerInterrupt();
 
-	for (int i = 0; i < NUM_PROCESSES; i++) {
-		processes[i] = (Process) { 0, 0xff00 };
+	for (i = 0; i < NUM_PROCESSES; i++) {
+		processes[i].active = 0;
+		processes[i].pointer = 0xff00;
 	}
 
 	while(1){
