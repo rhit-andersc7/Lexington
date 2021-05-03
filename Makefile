@@ -17,6 +17,7 @@ lexington.img: .out/lexington.img .out/bin/shell .out/bin/loadFile
 	cd dir && ../.out/bin/loadFile bigmess.txt
 	cd dir && ../.out/bin/loadFile tstprg
 	cd dir && ../.out/bin/loadFile tstpr2
+	cd dir && ../.out/bin/loadFile phello
 	mv dir/lexington.img lexington.img
 
 # Binary files {{{

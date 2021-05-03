@@ -262,3 +262,6 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
 			printString("Error Not a Function!\0");
 	}
 }
+
+void handleTimerInterrupt(int segment, int sp) {
+}
