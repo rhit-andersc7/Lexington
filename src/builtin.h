@@ -3,3 +3,4 @@ void makeInterrupt21();
 void makeTimerInterrupt();
 void putInMemory(int segment, int address, char character);
 void enableInterrupts();
+void launchProgram(int segment);
