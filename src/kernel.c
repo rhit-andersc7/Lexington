@@ -9,6 +9,9 @@
  */
 
 #define SECTOR_SIZE 512
+#define NUM_PROCESSES 8
+
+Process processes[NUM_PROCESSES];
 
 int main() {
 

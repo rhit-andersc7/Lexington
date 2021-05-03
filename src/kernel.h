@@ -13,3 +13,9 @@ void terminate();
 void writeSector(char*, int);
 void writeFile(char*, char*, int);
 void getSectors(char*, int*);
+
+struct process {
+	int active;
+	int pointer;
+};
+typedef struct process Process;
