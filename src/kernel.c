@@ -17,13 +17,14 @@ int currentProcess;
 int main() {
 	int i;
 
-	makeInterrupt21();
-	makeTimerInterrupt();
-
 	for (i = 0; i < NUM_PROCESSES; i++) {
 		processes[i].active = 0;
-		processes[i].pointer = (i + 2) * 0x1000;
+		processes[i].pointer = 0xff00;
+		processes[i].sector = (i + 2) * 0x1000;
 	}
+
+	makeInterrupt21();
+	makeTimerInterrupt();
 
 	while(1){
 		interrupt(0x21, 4, "shell\0", 0x2000, 0);
@@ -57,15 +58,17 @@ void executeProgram(char* name){
 
   for(i=0; i<NUM_PROCESSES; i++){
     if(processes[i].active == 0){
-      processes[i].active = 1;
-      segment = processes[i].pointer;
+			processes[i].active = 1;
+      processes[i].pointer = 0xff00;
+			/* segment = processes[i].sector; */
+			segment = (i + 2) * 0x1000;
       break;
     }
   }
 	
   error[0] = 'Y';
 
-	if (segment == 0) {
+	if (segment == -1) {
 		printString(error);
 		return;
 	}
