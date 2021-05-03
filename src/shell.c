@@ -1,3 +1,4 @@
+#include "./builtin.h"
 #include "shell.h"
 
 #define SECTOR_SIZE 512
@@ -5,6 +6,8 @@
 int main(){
 
 	char line[120];
+
+	enableInterrupts();
 
 	while(1){
 		print("Lexington> \0");
