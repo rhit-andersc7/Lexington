@@ -38,27 +38,43 @@ void terminate(){
 	}
 }
 
-void executeProgram(char* name, int segment){
-	char error[2];
-	char buffer[13312];
-	int i;
-	int fileSize;
+void executeProgram(char* name){
+  char error[2];
+  char buffer[13312];
+  int i;
+  int fileSize;
+  int segment = -1;
 
-	error[0] = 'X';
-	error[1] = '\0';
+  error[0] = 'X';
+  error[1] = '\0';
 
-	fileSize = readFile(name, buffer);
+  fileSize = readFile(name, buffer);
 
-	if(fileSize == -1){
+  if(fileSize == -1){
+    printString(error);
+    return;
+  }
+
+  for(i=0; i<NUM_PROCESSES; i++){
+    if(processes[i].active == 0){
+      processes[i].active = 1;
+      segment = processes[i].pointer;
+      break;
+    }
+  }
+	
+  error[0] = 'Y';
+
+	if (segment == 0) {
 		printString(error);
 		return;
 	}
-	
-	for(i=0; i<fileSize; i++){
-		putInMemory(segment, i, buffer[i]);
-	}
 
-	launchProgram(segment);
+  for(i=0; i<fileSize; i++){
+    putInMemory(segment, i, buffer[i]);
+  }
+
+  launchProgram(segment);
 }
 
 int readFile(char* file, char* buffer){	
@@ -258,7 +274,7 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
 			readFile(bx, cx);
 			break;
 		case 4:
-			executeProgram(bx,cx);
+			executeProgram(bx);
 			break;
 		case 5:
 			terminate();
@@ -275,6 +291,6 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
 }
 
 void handleTimerInterrupt(int segment, int sp) {
-	printString("tic\0");
+/*printString("tic\0");*/
 	returnFromTimer(segment, sp);
 }
