@@ -25,8 +25,8 @@ int main() {
 
 	currentProcess = -1;
 	makeInterrupt21();
-	interrupt(0x21, 4, "shell\0", 0x2000, 0);
 	makeTimerInterrupt();
+	interrupt(0x21, 4, "shell\0", 0x2000, 0);
 
 	while(1) {}
 
@@ -60,26 +60,22 @@ void executeProgram(char* name) {
 	setKernelDataSegment();
 	for (s = 0; s < NUM_PROCESSES; s++) {
 		if (processes[s].active == 0) {
+			segment = (s + 2) * 0x1000;
 			break;
 		}
 	}
-
-	if (s == NUM_PROCESSES) {
-		error[0] = 'Y';
-		printString(error);
-		return;
-	}
-
-	processes[s].active = 1;
-	processes[s].pointer = 0xff00;
-	/* segment = processes[s].sector; */
-	segment = (s + 2) * 0x1000;
-	currentProcess = s;
 	restoreDataSegment();
 
+	if (s == NUM_PROCESSES) { return; }
 	for (i = 0; i < fileSize; i++) {
 		putInMemory(segment, i, buffer[i]);
 	}
+
+	setKernelDataSegment();
+	processes[s].active = 1;
+	processes[s].pointer = 0xff00;
+	/* segment = processes[s].sector; */
+	restoreDataSegment();
 
 	initializeProgram(segment);
 }
@@ -306,13 +302,15 @@ void handleTimerInterrupt(int segment, int sp) {
 	}
 
 	while (1) {
-		currentProcess = mod(currentProcess + 1, NUM_PROCESSES);
+		/* currentProcess = mod(currentProcess + 1, NUM_PROCESSES); */
+		currentProcess++;
+		if (currentProcess >= NUM_PROCESSES) { currentProcess = 0; }
+
 		active = processes[currentProcess].active;
 		if (active == 1) { break; }
-		else if (active == 2) {
-		}
 	}
 
+	/* returnFromTimer(segment, sp); */
 	returnFromTimer(
 		(currentProcess + 2) * 0x1000,
 		processes[currentProcess].pointer
