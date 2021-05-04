@@ -17,7 +17,6 @@ void wait(char* program);
 
 struct process {
 	int active;
-	int sector;
 	int pointer;
 	int wait;
 };

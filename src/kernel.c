@@ -20,7 +20,6 @@ int main() {
 	for (i = 0; i < NUM_PROCESSES; i++) {
 		processes[i].active = 0;
 		processes[i].pointer = 0xff00;
-		processes[i].sector = (i + 2) * 0x1000;
 		processes[i].wait = -1;
 	}
 
