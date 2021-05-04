@@ -33,36 +33,36 @@ int main() {
 	return 0;
 }
 
-void terminate(){
+void terminate() {
 	setKernelDataSegment();
 	processes[currentProcess].active = 0;
 	while(1) {}
 }
 
-void executeProgram(char* name){
-  char error[2];
-  char buffer[13312];
-  int i;
-  int fileSize;
-  int segment;
+void executeProgram(char* name) {
+	char error[2];
+	char buffer[13312];
+	int i;
+	int fileSize;
+	int segment;
 	int s;
 
-  error[0] = 'X';
-  error[1] = '\0';
+	error[0] = 'X';
+	error[1] = '\0';
 
-  fileSize = readFile(name, buffer);
+	fileSize = readFile(name, buffer);
 
-  if(fileSize == -1){
-    printString(error);
-    return;
-  }
+	if (fileSize == -1) {
+		printString(error);
+		return;
+	}
 
 	setKernelDataSegment();
-  for(s=0; s<NUM_PROCESSES; s++){
-    if(processes[s].active == 0){
+	for (s = 0; s < NUM_PROCESSES; s++) {
+		if (processes[s].active == 0) {
 			break;
-    }
-  }
+		}
+	}
 
 	if (s == NUM_PROCESSES) {
 		error[0] = 'Y';
@@ -77,14 +77,14 @@ void executeProgram(char* name){
 	currentProcess = s;
 	restoreDataSegment();
 
-  for(i=0; i<fileSize; i++){
-    putInMemory(segment, i, buffer[i]);
-  }
+	for (i = 0; i < fileSize; i++) {
+		putInMemory(segment, i, buffer[i]);
+	}
 
-  initializeProgram(segment);
+	initializeProgram(segment);
 }
 
-int readFile(char* file, char* buffer){	
+int readFile(char* file, char* buffer) {
 	char notFoundMessage[2];
 	char directory[SECTOR_SIZE];
 	int i;
@@ -96,26 +96,28 @@ int readFile(char* file, char* buffer){
 
 	readSector(directory, 2);
 
-	for(i = 0; i < 16; i++){
+	for (i = 0; i < 16; i++) {
 		offset = i*32;
-		for(j = 0; j < 6; j++){
-			if(directory[j+offset]!=file[j]){
+		for (j = 0; j < 6; j++) {
+			if (directory[j+offset] != file[j]) {
 				break;
 			}
 		}
-		if((j==6 && file[j+1]=='\0') || (file[j]=='\0' && directory[j+offset]=='\0')){
-			
-			j=6;
-			while(j<32 && directory[offset+j]!=0){
+		if (
+			(j == 6 && file[j+1] == '\0') ||
+			(file[j] == '\0' && directory[j+offset] == '\0')
+		) {
+			j = 6;
+			while(j < 32 && directory[offset+j] != 0) {
 				readSector(buffer+(j-6)*512, directory[offset+j]);
 				j++;
 			}
-				
+
 			return (j-5)*512;
 		}
 	}
 	printString(notFoundMessage);
-	buffer[0]='\0';
+	buffer[0] = '\0';
 	return -1;
 }
 
@@ -142,7 +144,7 @@ void printStringLocation(char* text, int row, int column) {
 		c = text[++i];
 
 		column++;
-		if(column >= 80) {
+		if (column >= 80) {
 			row++;
 			column = 0;
 		}
@@ -201,14 +203,14 @@ void readSector(char* buffer, int sector) {
 	interrupt(0x13, 513, buffer, track*256+relativeSector, head*256);
 }
 
-void writeSector(char* buffer, int sector){
+void writeSector(char* buffer, int sector) {
 	int relativeSector = mod(sector, 18) + 1;
 	int head = mod(div(sector, 18), 2);
 	int track = div(sector, 36);
 	interrupt(0x13, (3 << 8) + 1, buffer, track*256+relativeSector, head*256);
 }
 
-void writeFile(char* name, char* contents, int sectors){
+void writeFile(char* name, char* contents, int sectors) {
 	char error[2];
 	char map[SECTOR_SIZE];
 	char dir[SECTOR_SIZE];
@@ -223,38 +225,38 @@ void writeFile(char* name, char* contents, int sectors){
 	readSector(map, 1);
 	readSector(dir, 2);
 
-	for(i=1;i<16;i++){
-		offset = i*32;
-		if(dir[offset]==0x00){
-			for(j=0; j<6; j++){
+	for (i = 1; i < 16; i++) {
+		offset = i * 32;
+		if (dir[offset] == 0x00) {
+			for (j = 0; j < 6; j++) {
 				dir[offset+j] = name[j];
-				if(name[j]=='\0'){
+				if (name[j] == '\0') {
 					break;
 				}
 			}
-	
-			for(j=j;j<6;j++){
-				dir[offset+j]='\0';
+
+			for (j = j; j < 6; j++) {
+				dir[offset+j] = '\0';
 			}
 			i = 0;
-			for(k=0; k<SECTOR_SIZE; k++){
-				if(map[k]==0x00){
+			for (k = 0; k < SECTOR_SIZE; k++) {
+				if (map[k] == 0x00) {
 					map[k] = 0xFF;
 					dir[offset+j] = k;
 					j++;
 					writeSector(contents+i*SECTOR_SIZE, k);
-					if(++i == sectors){
+					if (++i == sectors) {
 						break;
 					}
 				}
 			}
 
-			if(k == SECTOR_SIZE){
+			if (k == SECTOR_SIZE) {
 				return;
 			}
-			
-			for(j=j;j<32;j++){
-				dir[j]=0x00;
+
+			for (j = j; j < 32; j++) {
+				dir[j] = 0x00;
 			}
 
 			writeSector(dir, 2);
@@ -263,7 +265,6 @@ void writeFile(char* name, char* contents, int sectors){
 			return;
 		}
 	}
-
 }
 
 void handleInterrupt21(int ax, int bx, int cx, int dx) {
@@ -288,7 +289,7 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
 			break;
 		case 6:
 			writeSector(bx, cx);
-			break;	
+			break;
 		case 8:
 			writeFile(bx, cx, dx);
 			break;
