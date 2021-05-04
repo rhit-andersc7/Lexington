@@ -34,6 +34,7 @@ int main() {
 }
 
 void terminate(){
+	setKernelDataSegment();
 	processes[currentProcess].active = 0;
 	while(1) {}
 }
@@ -56,6 +57,7 @@ void executeProgram(char* name){
     return;
   }
 
+	setKernelDataSegment();
   for(s=0; s<NUM_PROCESSES; s++){
     if(processes[s].active == 0){
 			break;
@@ -73,6 +75,7 @@ void executeProgram(char* name){
 	/* segment = processes[s].sector; */
 	segment = (s + 2) * 0x1000;
 	currentProcess = s;
+	restoreDataSegment();
 
   for(i=0; i<fileSize; i++){
     putInMemory(segment, i, buffer[i]);
