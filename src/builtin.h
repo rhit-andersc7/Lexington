@@ -6,3 +6,5 @@ void enableInterrupts();
 void launchProgram(int segment);
 void initializeProgram(int segment);
 void returnFromTimer(int segment, int sp);
+void setKernelDataSegment();
+void restoreDataSegment();
