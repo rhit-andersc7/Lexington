@@ -21,6 +21,7 @@ int main() {
 		processes[i].active = 0;
 		processes[i].pointer = 0xff00;
 		processes[i].sector = (i + 2) * 0x1000;
+		processes[i].wait = -1;
 	}
 
 	currentProcess = -1;
@@ -40,7 +41,7 @@ void terminate() {
 	while(1) {}
 }
 
-void executeProgram(char* name) {
+int executeProgram(char* name) {
 	char error[2];
 	char buffer[13312];
 	int i;
@@ -55,7 +56,7 @@ void executeProgram(char* name) {
 
 	if (fileSize == -1) {
 		printString(error);
-		return;
+		return -1;
 	}
 
 	setKernelDataSegment();
@@ -67,7 +68,7 @@ void executeProgram(char* name) {
 	}
 	restoreDataSegment();
 
-	if (s == NUM_PROCESSES) { return; }
+	if (s == NUM_PROCESSES) { return -1; }
 	for (i = 0; i < fileSize; i++) {
 		putInMemory(segment, i, buffer[i]);
 	}
@@ -75,10 +76,12 @@ void executeProgram(char* name) {
 	setKernelDataSegment();
 	processes[s].active = 1;
 	processes[s].pointer = 0xff00;
-	/* segment = processes[s].sector; */
+	processes[s].wait = -1;
 	restoreDataSegment();
 
 	initializeProgram(segment);
+
+	return s;
 }
 
 int readFile(char* file, char* buffer) {
@@ -298,31 +301,47 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
 			break;
 		case 9:
 			killProcess(bx);
-			break; 
+			break;
+		case 10:
+			wait(bx);
+			break;
 		default:
 			printString("Error Not a Function!\0");
 	}
 }
 
 void handleTimerInterrupt(int segment, int sp) {
-	int active;
+	int active, wait;
 
 	if (currentProcess != -1) {
 		processes[currentProcess].pointer = sp;
 	}
 
 	while (1) {
-		/* currentProcess = mod(currentProcess + 1, NUM_PROCESSES); */
 		currentProcess++;
 		if (currentProcess >= NUM_PROCESSES) { currentProcess = 0; }
 
 		active = processes[currentProcess].active;
 		if (active == 1) { break; }
+		if (active == 2) {
+			wait = processes[currentProcess].wait;
+			if (processes[wait].active == 0) {
+				processes[currentProcess].wait = -1;
+				processes[currentProcess].active = 1;
+			}
+		}
 	}
 
-	/* returnFromTimer(segment, sp); */
 	returnFromTimer(
 		(currentProcess + 2) * 0x1000,
 		processes[currentProcess].pointer
 	);
+}
+
+void wait(char* program) {
+	int s = executeProgram(program);
+	setKernelDataSegment();
+	processes[currentProcess].wait = s;
+	processes[currentProcess].active = 2;
+	restoreDataSegment();
 }

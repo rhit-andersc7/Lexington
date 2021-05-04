@@ -5,6 +5,7 @@ int stringEqual(char*, char*);
 void typeCommand(char*);
 void killCommand(char*);
 void executeCommand(char*);
+void executeForeground(char* filename);
 void dirCommand();
 void copyCommand(char*, char*);
 void print(char*);

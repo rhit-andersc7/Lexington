@@ -23,20 +23,17 @@ void runCommand(char* line) {
 	print("\n\r\0");
 	if (stringEqual(command[0], "type\0")) {
 		typeCommand(command[1]);
-	}
-	else if (stringEqual(command[0], "execute\0")) {
+	} else if (stringEqual(command[0], "execute\0")) {
 		executeCommand(command[1]);
-	}
-	else if (stringEqual(command[0], "dir\0")) {
+	} else if (stringEqual(command[0], "execforeground\0")) {
+		executeForeground(command[1]);
+	} else if (stringEqual(command[0], "dir\0")) {
 		dirCommand();
-	}
-	else if (stringEqual(command[0], "copy\0")) {
+	} else if (stringEqual(command[0], "copy\0")) {
 		copyCommand(command[1], command[2]);
-	}	
-	else if (stringEqual(command[0], "kill\0")) {
+	}	else if (stringEqual(command[0], "kill\0")) {
 		killCommand(command[1]);
-	}
-	else {
+	} else {
 		print("Bad Command!\0");
 	}
 	print("\n\r\0");
@@ -100,6 +97,10 @@ void typeCommand(char* filename) {
 
 void executeCommand(char* filename) {
 		interrupt(0x21, 4, filename, 0x2000, 0);
+}
+
+void executeForeground(char* filename) {
+		interrupt(0x21, 10, filename, 0x2000, 0);
 }
 
 void print(char* line) {
