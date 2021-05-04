@@ -32,6 +32,9 @@ void runCommand(char* line) {
 	}
 	else if (stringEqual(command[0], "copy\0")) {
 		copyCommand(command[1], command[2]);
+	}	
+	else if (stringEqual(command[0], "kill\0")) {
+		killCommand(command[1]);
 	}
 	else {
 		print("Bad Command!\0");
@@ -82,6 +85,12 @@ int stringEqual(char* s1, char* s2) {
 	}
 	return 1;
 }
+
+void killCommand(char* segment) {
+	
+	interrupt(0x21, 9, segment[0] - 48, 0, 0); 
+}
+
 void typeCommand(char* filename) {
 	char buffer[13312];
 

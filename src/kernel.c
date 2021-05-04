@@ -33,6 +33,7 @@ int main() {
 	return 0;
 }
 
+
 void terminate() {
 	setKernelDataSegment();
 	processes[currentProcess].active = 0;
@@ -192,6 +193,12 @@ int div(int a, int b) {
 	return quotient;
 }
 
+void killProcess(int segment) {
+	setKernelDataSegment();
+	processes[segment].active = 0;
+	restoreDataSegment();
+}
+
 void readSector(char* buffer, int sector) {
 	int relativeSector = mod(sector, 18) + 1;
 	int head = mod(div(sector, 18), 2);
@@ -289,6 +296,9 @@ void handleInterrupt21(int ax, int bx, int cx, int dx) {
 		case 8:
 			writeFile(bx, cx, dx);
 			break;
+		case 9:
+			killProcess(bx);
+			break; 
 		default:
 			printString("Error Not a Function!\0");
 	}
